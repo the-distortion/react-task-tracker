@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "./components/Header";
 import Tasks from "./components/Tasks";
+import AddTask from "./components/AddTask"
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -23,6 +24,12 @@ function App() {
       reminder: true,
     },
   ]);
+  const [showAddTask, setShowAddTask] = useState(false);
+
+  // Add Task
+  const addTask = (task) => {
+    setTasks([...tasks, task]);
+  }
 
   // Delete Task
   const deleteTask = (id) => {
@@ -31,17 +38,22 @@ function App() {
 
   // Toggle Reminder
   const toggleReminder = (id) => {
-    // tasks.forEach((task) => {
-    //   if(task.id === id) {
-    //     document.querySelectorAll('.task.reminder')[id].style = { display: "none"};
-    //   }
-    // });
-    setTasks(tasks.map( (task) => task.id === id ? { ...task, reminder: !task.reminder } : task ));
+    setTasks(tasks.map(
+      (task) => task.id === id
+                ? { ...task, reminder: !task.reminder }
+                : task 
+    ));
+  }
+
+  //Toggle showAddTask
+  const toggleShowAddTask = () => {
+    setShowAddTask(!showAddTask);
   }
 
   return (
     <div className="container">
-      <Header />
+      <Header showAddTask={showAddTask} toggleShowAddTask={toggleShowAddTask} />
+      {showAddTask && <AddTask onAdd={addTask} />}
       {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} /> : 'Nothing lmao'}
     </div>
   );
